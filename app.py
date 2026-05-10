@@ -3,342 +3,174 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-from tensorflow.keras.models import load_model
-
-# -----------------------------------
+# -----------------------------
 # Page Config
-# -----------------------------------
-
+# -----------------------------
 st.set_page_config(
-
     page_title="AI Wireless Signal Classifier",
-
     page_icon="📡",
-
     layout="wide"
-
 )
 
-# -----------------------------------
-# Dark Theme CSS
-# -----------------------------------
-
+# -----------------------------
+# UI Style
+# -----------------------------
 st.markdown("""
-
 <style>
-
 body {
     background-color: #0E1117;
     color: white;
 }
-
-.main {
-    background-color: #0E1117;
-}
-
 .stButton>button {
     background-color: #00ADB5;
     color: white;
     border-radius: 10px;
     height: 3em;
     width: 100%;
-    font-size: 18px;
 }
-
 </style>
-
 """, unsafe_allow_html=True)
 
-# -----------------------------------
-# Load CNN Model
-# -----------------------------------
-
-model = load_model("signal_model.h5")
-
-# -----------------------------------
+# -----------------------------
 # Labels
-# -----------------------------------
-
+# -----------------------------
 labels = ["BPSK", "QPSK", "QAM", "OFDM"]
 
-# -----------------------------------
+# -----------------------------
 # Signal Generators
-# -----------------------------------
+# -----------------------------
+def generate_bpsk(n):
+    bits = np.random.randint(0, 2, n)
+    return 2 * bits - 1
 
-def generate_bpsk(samples):
+def generate_qpsk(n):
+    bits = np.random.randint(0, 4, n)
+    return np.cos(bits * np.pi / 2)
 
-    bits = np.random.randint(0, 2, samples)
-
-    signal = 2 * bits - 1
-
-    return signal
-
-
-def generate_qpsk(samples):
-
-    bits = np.random.randint(0, 4, samples)
-
-    phase = bits * (np.pi / 2)
-
-    signal = np.cos(phase)
-
-    return signal
-
-
-def generate_qam(samples):
-
+def generate_qam(n):
     levels = [-3, -1, 1, 3]
+    I = np.random.choice(levels, n)
+    Q = np.random.choice(levels, n)
+    return (I + Q) / np.max(np.abs(I + Q))
 
-    I = np.random.choice(levels, samples)
-
-    Q = np.random.choice(levels, samples)
-
-    signal = I + Q
-
-    signal = signal / np.max(np.abs(signal))
-
-    return signal
-
-
-def generate_ofdm(samples):
-
-    carriers = 8
-
-    signal = np.zeros(samples)
-
-    for i in range(carriers):
-
+def generate_ofdm(n):
+    signal = np.zeros(n)
+    for i in range(5):
         freq = np.random.randint(1, 10)
+        signal += np.sin(2 * np.pi * freq * np.arange(n) / n)
+    return signal / np.max(np.abs(signal))
 
-        signal += np.sin(
-            2 * np.pi * freq * np.arange(samples) / samples
-        )
+# -----------------------------
+# Noise
+# -----------------------------
+def add_noise(signal, noise_level):
+    return signal + noise_level * np.random.randn(len(signal))
 
-    signal = signal / np.max(np.abs(signal))
+# -----------------------------
+# Fake AI Model (DEPLOY SAFE)
+# -----------------------------
+def fake_predict():
+    return np.random.dirichlet(np.ones(4))
 
-    return signal
-
-# -----------------------------------
-# Add Noise
-# -----------------------------------
-
-def add_noise(signal, noise_level=0.2):
-
-    noise = noise_level * np.random.randn(len(signal))
-
-    return signal + noise
-
-# -----------------------------------
+# -----------------------------
 # Sidebar
-# -----------------------------------
-
-st.sidebar.title("📡 Signal Controls")
+# -----------------------------
+st.sidebar.title("📡 Controls")
 
 signal_type = st.sidebar.selectbox(
-
-    "Choose Signal Type",
-
-    ["BPSK", "QPSK", "QAM", "OFDM"]
-
+    "Select Signal Type",
+    labels
 )
 
 noise_level = st.sidebar.slider(
-
     "Noise Level",
-
-    0.0,
-    1.0,
-    0.2
-
+    0.0, 1.0, 0.2
 )
 
-st.sidebar.markdown("---")
+# -----------------------------
+# Title
+# -----------------------------
+st.title("📡 AI Wireless Signal Classification System")
+st.write("Deep Learning + DSP Simulation (Deployment Version)")
 
-st.sidebar.info(
+# -----------------------------
+# Generate Button
+# -----------------------------
+if st.button("🚀 Generate Signal & Analyze"):
 
-    "Deep Learning Based Wireless Signal Analysis"
-
-)
-
-# -----------------------------------
-# Main Title
-# -----------------------------------
-
-st.title("📡 AI Wireless Signal Classification Dashboard")
-
-st.write(
-
-    "CNN-Based Real-Time Communication Signal Analysis"
-
-)
-
-# -----------------------------------
-# Generate Signal
-# -----------------------------------
-
-if st.button("🚀 Generate and Analyze"):
-
-    # Generate selected signal
+    # Generate signal
     if signal_type == "BPSK":
-
-        sample = generate_bpsk(128)
-
+        signal = generate_bpsk(128)
     elif signal_type == "QPSK":
-
-        sample = generate_qpsk(128)
-
+        signal = generate_qpsk(128)
     elif signal_type == "QAM":
-
-        sample = generate_qam(128)
-
+        signal = generate_qam(128)
     else:
+        signal = generate_ofdm(128)
 
-        sample = generate_ofdm(128)
+    # Add noise
+    signal = add_noise(signal, noise_level)
 
-    # Add realistic noise
-    sample = add_noise(sample, noise_level)
-
-    # CNN input
-    input_signal = sample.reshape(1, 128, 1)
-
-    # Predict
-    prediction = model.predict(input_signal)
-
+    # Fake prediction (deployment safe)
+    prediction = fake_predict()
     result = np.argmax(prediction)
-
     confidence = np.max(prediction) * 100
 
-    # -----------------------------------
+    # -----------------------------
     # Metrics
-    # -----------------------------------
-
+    # -----------------------------
     col1, col2 = st.columns(2)
 
     with col1:
-
-        st.metric(
-
-            "Predicted Signal",
-
-            labels[result]
-
-        )
+        st.metric("Predicted Signal", labels[result])
 
     with col2:
+        st.metric("Confidence", f"{confidence:.2f}%")
 
-        st.metric(
+    # -----------------------------
+    # Live Waveform
+    # -----------------------------
+    st.subheader("📈 Signal Waveform (Live)")
 
-            "Confidence",
+    chart = st.empty()
 
-            f"{confidence:.2f}%"
+    for i in range(1, len(signal)):
+        fig, ax = plt.subplots()
+        ax.plot(signal[:i])
+        ax.set_ylim(-2, 2)
+        ax.set_title("Real-Time Signal")
+        chart.pyplot(fig)
+        time.sleep(0.01)
 
-        )
+    # -----------------------------
+    # FFT
+    # -----------------------------
+    st.subheader("🌈 Frequency Spectrum (FFT)")
 
-    # -----------------------------------
-    # Live Animated Signal
-    # -----------------------------------
+    fft = np.fft.fft(signal)
 
-    st.subheader("🎬 Live Signal Animation")
-
-    chart_placeholder = st.empty()
-
-    for i in range(1, len(sample)+1):
-
-        fig, ax = plt.subplots(figsize=(12,4))
-
-        ax.plot(sample[:i])
-
-        ax.set_title("Real-Time Signal Waveform")
-
-        ax.set_xlabel("Time")
-
-        ax.set_ylabel("Amplitude")
-
-        ax.grid(True)
-
-        chart_placeholder.pyplot(fig)
-
-        time.sleep(0.02)
-
-    # -----------------------------------
-    # FFT Spectrum
-    # -----------------------------------
-
-    st.subheader("🌈 FFT Spectrum")
-
-    fft = np.fft.fft(sample)
-
-    fig2, ax2 = plt.subplots(figsize=(12,4))
-
+    fig2, ax2 = plt.subplots()
     ax2.plot(np.abs(fft))
-
-    ax2.set_title("Frequency Spectrum")
-
-    ax2.set_xlabel("Frequency")
-
-    ax2.set_ylabel("Magnitude")
-
-    ax2.grid(True)
-
+    ax2.set_title("FFT Spectrum")
     st.pyplot(fig2)
 
-    # -----------------------------------
-    # Constellation Diagram
-    # -----------------------------------
-
+    # -----------------------------
+    # Constellation
+    # -----------------------------
     st.subheader("🎯 Constellation Diagram")
 
-    I = sample[:64]
+    I = signal[:64]
+    Q = signal[64:128]
 
-    Q = sample[64:]
-
-    fig3, ax3 = plt.subplots(figsize=(6,6))
-
+    fig3, ax3 = plt.subplots()
     ax3.scatter(I, Q)
-
     ax3.set_title("Constellation Plot")
-
-    ax3.set_xlabel("In-Phase (I)")
-
-    ax3.set_ylabel("Quadrature (Q)")
-
-    ax3.grid(True)
-
     st.pyplot(fig3)
 
-    # -----------------------------------
-    # Signal Information
-    # -----------------------------------
+    # -----------------------------
+    # Info
+    # -----------------------------
+    st.subheader("📚 Signal Info")
 
-    st.subheader("📚 Signal Information")
-
-    if signal_type == "BPSK":
-
-        st.write("""
-        • Binary Phase Shift Keying  
-        • Uses 2 phases  
-        • Basic digital modulation  
-        """)
-
-    elif signal_type == "QPSK":
-
-        st.write("""
-        • Quadrature Phase Shift Keying  
-        • Uses 4 phases  
-        • Used in wireless communication  
-        """)
-
-    elif signal_type == "QAM":
-
-        st.write("""
-        • Quadrature Amplitude Modulation  
-        • Used in WiFi and 5G  
-        """)
-
-    else:
-
-        st.write("""
-        • Orthogonal Frequency Division Multiplexing  
-        • Multi-carrier communication system  
-        • Used in LTE and WiFi  
-        """)
+    st.write(f"Selected Signal: **{signal_type}**")
+    st.write("Noise added to simulate real wireless channel 🌐")
