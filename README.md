@@ -1,16 +1,12 @@
-# 📡 AI Wireless Signal Classification System
+ 📡 AI Wireless Signal Classification System
 
-## 🚀 Overview
+Overview
 
 The AI Wireless Signal Classification System is an advanced ECE + AIML project that combines communication engineering, digital signal processing (DSP), and deep learning for intelligent wireless signal analysis. The system automatically classifies multiple wireless modulation schemes using a CNN-based deep learning model and provides real-time visualization through an interactive dashboard.
 
 This project simulates realistic wireless communication environments by introducing noisy channel conditions using Additive White Gaussian Noise (AWGN). It also provides FFT spectrum analysis, constellation diagrams, confusion matrix evaluation, and live signal waveform animation.
 
----
-
-# ✨ Features
-
-## 🤖 Deep Learning Features
+ Deep Learning Features
 
 * CNN-based wireless signal classification
 * Real-time modulation prediction
@@ -19,9 +15,8 @@ This project simulates realistic wireless communication environments by introduc
 * Performance evaluation using confusion matrix
 * Classification report generation
 
----
 
-## 📡 Communication System Features
+ Communication System Features
 
 * BPSK Signal Generation
 * QPSK Signal Generation
@@ -32,7 +27,7 @@ This project simulates realistic wireless communication environments by introduc
 
 ---
 
-## 📊 DSP Features
+ DSP Features
 
 * FFT Spectrum Analysis
 * Signal Waveform Visualization
@@ -40,9 +35,7 @@ This project simulates realistic wireless communication environments by introduc
 * Frequency-domain signal analysis
 * Time-domain signal monitoring
 
----
-
-## 🌙 Dashboard Features
+ Dashboard Features
 
 * Professional dark-themed UI
 * Interactive Streamlit dashboard
@@ -52,9 +45,7 @@ This project simulates realistic wireless communication environments by introduc
 * Noise level adjustment slider
 * Interactive visual analytics
 
----
-
-# 🧠 Technologies Used
+Technologies Used
 
 | Technology         | Purpose               |
 | ------------------ | --------------------- |
@@ -65,9 +56,8 @@ This project simulates realistic wireless communication environments by introduc
 | Matplotlib         | Visualization         |
 | Scikit-learn       | Model Evaluation      |
 
----
 
-# 📈 Supported Signal Types
+ Supported Signal Types
 
 | Signal Type | Description                                |
 | ----------- | ------------------------------------------ |
@@ -78,7 +68,7 @@ This project simulates realistic wireless communication environments by introduc
 
 ---
 
-# 🏗️ Project Architecture
+Project Architecture
 
 ```text
 Signal Generation
@@ -96,7 +86,7 @@ Visualization Dashboard
 
 ---
 
-# 📂 Project Structure
+ Project Structure
 
 ```text
 signal_classifier/
@@ -111,25 +101,24 @@ signal_classifier/
 
 ---
 
-# ⚙️ Installation
+ Installation
 
-## 1️⃣ Clone Repository
+ Clone Repository
 
 ```bash
 git clone https://github.com/JayaPrakash-2409/ai-wireless-signal-classifier.git
 ```
 
----
 
-## 2️⃣ Open Project Folder
+ Open Project Folder
 
-```bash
+`bash
 cd ai-wireless-signal-classifier
-```
+
 
 ---
 
-## 3️⃣ Install Requirements
+Install Requirements
 
 ```bash
 pip install -r requirements.txt
@@ -137,15 +126,15 @@ pip install -r requirements.txt
 
 ---
 
-# ▶️ Run Project
+ Run Project
 
-## Train Model
+Train Model
 
 ```bash
 python train.py
 ```
 
-## Start Dashboard
+Start Dashboard
 
 ```bash
 streamlit run app.py
@@ -153,7 +142,7 @@ streamlit run app.py
 
 ---
 
-# 📊 Model Evaluation
+ Model Evaluation
 
 The model is evaluated using:
 
@@ -166,7 +155,7 @@ The model is evaluated using:
 
 ---
 
-# 🌐 Future Enhancements
+ Future Enhancements
 
 * Real RadioML Dataset Integration
 * FastAPI Backend
@@ -176,9 +165,8 @@ The model is evaluated using:
 * Cloud Deployment
 * Real-Time SDR Integration
 
----
 
-# 🎯 Applications
+ Applications
 
 * Wireless Communication Analysis
 * Signal Intelligence Systems
@@ -187,15 +175,14 @@ The model is evaluated using:
 * Communication Engineering Research
 * 5G/WiFi Signal Analytics
 
----
 
-# 👨‍💻 Author
+ Author
 
 Jaya Prakash
 
----
 
-# ⭐ Project Highlights
+
+Project Highlights
 
 ✅ Advanced ECE + AIML Project
 
